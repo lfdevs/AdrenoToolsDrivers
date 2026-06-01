@@ -61,10 +61,22 @@ prepare_workdir(){
 		cd $srcfolder
 }
 
+apply_patch() {
+	if ! git apply --check $1; then
+			echo "Failed to apply $1!"
+			exit 1
+		fi
+    	git apply $1
+}
+
 # $1 - real branch, $2 - escaped branch name
 build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
 	git checkout --force origin/$1
+	echo "Applying patches"
+	for patch in ../patches/*; do
+		apply_patch $patch
+	done
 	echo "Pushing TU_VERSION..."
 	echo "#define TUGEN8_DRV_VERSION \"v$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
 	#Workaround for using Clang as c compiler instead of GCC
