@@ -6,6 +6,7 @@ red='\033[0;31m'
 nocolor='\033[0m'
 deps="git meson ninja patchelf unzip curl pip flex bison zip glslang glslangValidator"
 workdir="$(pwd)/turnip_workdir"
+base_workdir="$(pwd)"
 magiskdir="$workdir/turnip_module"
 ndkver="android-ndk-r29"
 ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
@@ -19,7 +20,7 @@ clear
 #You can insert your own function and make a pull request.
 run_all(){
 	echo "====== Begin building TU V$BUILD_VERSION! ======"
-	echo "Current directory: $(pwd)"
+	echo "Current directory: $base_workdir"
 	check_deps
 	prepare_workdir
 	# This has path slash in the branch name and thus needs some workarounds
@@ -78,7 +79,7 @@ build_lib_for_android(){
 	git checkout --force origin/$1
 	echo "Applying patches"
 	if [[ ! -z "${APPLY_PATCHES}" ]]; then
-		for patch in $HOME/patches/*; do
+		for patch in $base_workdir/patches/*; do
 			apply_patch $patch
 		done
 	fi
