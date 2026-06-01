@@ -25,8 +25,7 @@ run_all(){
 	prepare_workdir
 	# This has path slash in the branch name and thus needs some workarounds
 	build_lib_for_android turnip/gen8 turnip-gen8 
-	export APPLY_PATCHES=1
-	build_lib_for_android turnip/gen8 turnip-gen8-sync
+	build_lib_for_android turnip/gen8 turnip-gen8-sync apply
 	#build_lib_for_android gen8-yuck
 }
 
@@ -66,6 +65,7 @@ prepare_workdir(){
 }
 
 apply_patch() {
+	echo "Applying patch $1"
 	if ! git apply --check $1; then
 			echo "Failed to apply $1!"
 			exit 1
@@ -77,8 +77,8 @@ apply_patch() {
 build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
 	git checkout --force origin/$1
-	echo "Applying patches"
-	if [[ ! -z "${APPLY_PATCHES}" ]]; then
+	if [[ "$3" == "apply" ]]; then
+		echo "Applying patches"
 		for patch in $base_workdir/patches/*; do
 			apply_patch $patch
 		done
