@@ -23,6 +23,8 @@ run_all(){
 	prepare_workdir
 	# This has path slash in the branch name and thus needs some workarounds
 	build_lib_for_android turnip/gen8 turnip-gen8 
+	export APPLY_PATCHES=1
+	build_lib_for_android turnip/gen8 turnip-gen8-sync
 	#build_lib_for_android gen8-yuck
 }
 
@@ -74,9 +76,11 @@ build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
 	git checkout --force origin/$1
 	echo "Applying patches"
-	for patch in ../patches/*; do
-		apply_patch $patch
-	done
+	if [[ ! -z "${APPLY_PATCHES}" ]]; then
+		for patch in ../patches/*; do
+			apply_patch $patch
+		done
+	fi
 	echo "Pushing TU_VERSION..."
 	echo "#define TUGEN8_DRV_VERSION \"v$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
 	#Workaround for using Clang as c compiler instead of GCC
