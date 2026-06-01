@@ -77,7 +77,7 @@ build_lib_for_android(){
 	git checkout --force origin/$1
 	echo "Applying patches"
 	if [[ ! -z "${APPLY_PATCHES}" ]]; then
-		for patch in ../patches/*; do
+		for patch in $HOME/patches/*; do
 			apply_patch $patch
 		done
 	fi
