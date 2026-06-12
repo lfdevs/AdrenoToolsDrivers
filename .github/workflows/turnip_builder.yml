@@ -7,12 +7,17 @@ on:
         description: 'Version to build'
         required: true
         type: string
+      tag:
+        description: 'Tag to checkout'
+        required: true
+        type: string
 
 jobs:
   start_building_turnip:
     runs-on: ubuntu-24.04
     env:
       BUILD_VERSION: ${{ inputs.version }}
+      GIT_TAG: ${{ inputs.tag }}
     steps:
     - name: Checkout repo
       uses: actions/checkout@v6

@@ -59,7 +59,7 @@ prepare_workdir(){
 		unzip "$ndkver"-linux.zip &> /dev/null
 
 	echo "Downloading mesa source ..." $'\n'
-		git clone $mesasrc --depth=1 --no-single-branch $srcfolder
+		git clone $mesasrc -b $GIT_TAG --depth=1 --single-branch $srcfolder
 		cd $srcfolder
 }
 
