@@ -11,7 +11,7 @@ magiskdir="$workdir/turnip_module"
 ndkver="android-ndk-r29"
 ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 sdkver="34"
-mesasrc="https://github.com/whitebelyash/mesa-unified"
+mesasrc="https://github.com/lfdevs/mesa-for-android-container"
 srcfolder="mesa"
 
 clear
@@ -19,14 +19,13 @@ clear
 #There are 4 functions here, simply comment to disable.
 #You can insert your own function and make a pull request.
 run_all(){
-	echo "====== Begin building TU V$BUILD_VERSION! ======"
+	echo "====== Begin building Turnip $BUILD_VERSION! ======"
 	echo "Current directory: $base_workdir"
 	check_deps
 	prepare_workdir
 	# This has path slash in the branch name and thus needs some workarounds
-	build_lib_for_android turnip/gen8 turnip-gen8 
-	build_lib_for_android turnip/gen8 turnip-gen8-sync apply
-	#build_lib_for_android gen8-yuck
+	build_lib_for_android dev/adreno-main turnip
+	# build_lib_for_android dev/adreno-main turnip-sync apply
 }
 
 check_deps(){
@@ -84,7 +83,7 @@ build_lib_for_android(){
 		done
 	fi
 	echo "Pushing TU_VERSION..."
-	echo "#define TUGEN8_DRV_VERSION \"v$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
+	echo "#define TUGEN8_DRV_VERSION \"$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
 	#Workaround for using Clang as c compiler instead of GCC
 	mkdir -p "$workdir/bin"
 	ln -sf "$ndk/clang" "$workdir/bin/cc"
@@ -161,19 +160,19 @@ EOF
 	cat <<EOF >"meta.json"
 {
   "schemaVersion": 1,
-  "name": "A8XX Turnip v$BUILD_VERSION",
-  "description": "A8xx support with some hacks. Built from $1 branch",
-  "author": "whitebelyash",
+  "name": "Turnip $BUILD_VERSION",
+  "description": "Built from $1 branch",
+  "author": "lfdevs",
   "packageVersion": "1",
   "vendor": "Mesa",
-  "driverVersion": "Vulkan 1.4.335",
+  "driverVersion": "Vulkan 1.4.353",
   "minApi": 28,
   "libraryName": "libvulkan_freedreno.so"
 }
 EOF
-zip /tmp/a8xx-$2-V$BUILD_VERSION.zip libvulkan_freedreno.so meta.json
+zip /tmp/$2-$BUILD_VERSION.zip libvulkan_freedreno.so meta.json
 cd -
-if ! [ -a /tmp/a8xx-$2-V$BUILD_VERSION.zip ]; then
+if ! [ -a /tmp/$2-$BUILD_VERSION.zip ]; then
 	echo -e "$red Failed to pack the archive! $nocolor"
 fi
 }

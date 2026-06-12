@@ -15,7 +15,7 @@ jobs:
       BUILD_VERSION: ${{ inputs.version }}
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
 
     - name: Prepare environment
       run: |
@@ -28,34 +28,23 @@ jobs:
       run: bash ./turnip_builder.sh
 
     - name: Release "turnip"
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         body: |
-          A8XX Turnip Vulkan V${{ inputs.version }}
-          Built from: https://github.com/whitebelyash/mesa-unified (turnip/gen8 branch)
+          # Turnip ${{ inputs.version }}
+          Built from: https://github.com/lfdevs/mesa-for-android-container (`dev/adreno-main` branch)
           
-          I didn't test this this much. Contact me on FEX (#android-wastelands) or EmuCore discord if there are any issues.
+          > [!WARNING]
+          > Since the modifications made to the upstream Mesa source code on this branch are mainly targeted at Termux:X11, the drivers built using this branch **may not be suitable for scenarios such as game emulators**.
+          
+          ## Supported GPUs
+          See https://github.com/lfdevs/mesa-for-android-container#compatibility
+          
+          ## Changelog
+          Please refer to the changelog of the corresponding version here: https://github.com/lfdevs/mesa-for-android-container/releases
 
-          
-          >[!WARNING]
-          > Please don't report issues to Mesa, PLEASE
-                    
-          Supported GPUs:
-          * Adreno 8XX Family: 840, 830, 829, 825, 810
-          * Adreno 7XX Family: any GPU supported by the upstream Turnip + 710/720 from Termux patches (unstable)
-          * Adreno 6XX Family: any GPU supported by the upstream Turnip
-          
-          GPUs other than 830/840 can have reduced performance and/or more glitches. Can't do anything about that, sorry!  
-          Adreno 810 is additionally very slow, I'm not sure if you even want to use Turnip there
-          
-          Notes:
-          * Disable DXVK_HUD if you see weird black artifacts
-          * Apparently there are swizzling glitches in Eden & maybe other emulators, try increasing render scale(?)
-          * Some games may require AMD/NVIDIA GPU to run and refuse to start on Qualcomm or block some features. I've included a patch to spoof as Steam Deck - use `TU_DEBUG=deck_emu`
-          * GMEM rendering produces glitchy picture on A830 (write page faults), disable it with `TU_DEBUG=sysmem`. It's pretty much useless for PC emulation anyway.
-
-        tag_name: tu_v${{ inputs.version }}
-        name: Turnip A8XX v${{ inputs.version }}
+        tag_name: tu-${{ inputs.version }}
+        name: Turnip ${{ inputs.version }}
         files: |
-           /tmp/a8xx-turnip-gen8-V${{ inputs.version }}.zip
-           /tmp/a8xx-turnip-gen8-sync-V${{ inputs.version }}.zip
+           /tmp/turnip-${{ inputs.version }}.zip
+          #  /tmp/turnip-sync-${{ inputs.version }}.zip

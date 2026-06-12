@@ -1,8 +1,10 @@
 # AdrenoTools Driver packages (Freedreno/Turnip CI)
 
 This repository holds scripts and workflow to autobuild new Turnip driver releases adapted for AdrenoTools usage.  
-These builds are based on https://github.com/whitebelyash/mesa-unified repository (turnip/gen8) to properly or improperly support some Adreno 8XX GPUs till the support reaches upstream.
+These builds are based on https://github.com/lfdevs/mesa-for-android-container repository (dev/adreno-main).
 
+> [!WARNING]
+> Since the modifications made to the upstream Mesa source code on this branch are mainly targeted at Termux:X11, the drivers built using this branch **may not be suitable for scenarios such as game emulators**.
 
 Old README:
 <details>
