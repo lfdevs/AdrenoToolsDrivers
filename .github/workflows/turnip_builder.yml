@@ -32,6 +32,13 @@ jobs:
     - name: Execute build script
       run: bash ./turnip_builder.sh
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: turnip-${{ inputs.version }}
+        path: |
+          /tmp/turnip-${{ inputs.version }}.zip
+
     - name: Release "turnip"
       uses: softprops/action-gh-release@v3
       with:
